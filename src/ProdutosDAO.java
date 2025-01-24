@@ -22,6 +22,43 @@ public class ProdutosDAO {
     ResultSet resultset;
     ArrayList<ProdutosDTO> listagem = new ArrayList<>();
     
+    public void venderProduto(int idProduto){
+    PreparedStatement pstmt = null;
+
+    try {
+        // Abrindo conexão com o banco
+        conn = new conectaDAO().connectDB();
+
+        // Query SQL para atualizar o status do produto
+        String sql = "UPDATE produtos SET status = ? WHERE id = ?";
+
+        // Preparando a consulta
+        pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1, "Vendido"); // Novo status
+        pstmt.setInt(2, idProduto);   // ID do produto
+
+        // Executando a atualização
+        int linhasAfetadas = pstmt.executeUpdate();
+
+        if (linhasAfetadas > 0) {
+            System.out.println("Produto atualizado para 'Vendido' com sucesso!");
+        } else {
+            System.out.println("Produto não encontrado ou já vendido.");
+        }
+
+    } catch (SQLException e) {
+        System.err.println("Erro ao atualizar o produto: " + e.getMessage());
+    } finally {
+        // Fechando recursos
+        try {
+            if (pstmt != null) pstmt.close();
+            if (conn != null) conn.close();
+        } catch (SQLException e) {
+            System.err.println("Erro ao fechar recursos: " + e.getMessage());
+        }
+    }
+    }
+    
     public void cadastrarProduto (ProdutosDTO produto){
     PreparedStatement pstmt = null;
 
