@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /*
@@ -20,6 +21,32 @@ public class listagemVIEW extends javax.swing.JFrame {
         initComponents();
         listarProdutos();
     }
+    
+    private void listarProdutosVendidos() {
+    try {
+        ProdutosDAO produtosdao = new ProdutosDAO();
+
+        // Configurar o modelo da tabela
+        DefaultTableModel model = (DefaultTableModel) listaProdutos.getModel();
+        model.setNumRows(0); // Limpa a tabela antes de adicionar os novos dados
+
+        // Obter a lista de produtos vendidos
+        ArrayList<ProdutosDTO> listagem = produtosdao.listarProdutosVendidos();
+
+        // Preencher a tabela com os produtos vendidos
+        for (ProdutosDTO produto : listagem) {
+            model.addRow(new Object[]{
+                produto.getId(),
+                produto.getNome(),
+                produto.getValor(),
+                produto.getStatus()
+            });
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Erro ao listar os produtos vendidos: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -40,6 +67,7 @@ public class listagemVIEW extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         btnVendas = new javax.swing.JButton();
         btnVoltar = new javax.swing.JButton();
+        consultarTodosButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -85,6 +113,13 @@ public class listagemVIEW extends javax.swing.JFrame {
             }
         });
 
+        consultarTodosButton.setText("Consultar Todos");
+        consultarTodosButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                consultarTodosButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -104,7 +139,8 @@ public class listagemVIEW extends javax.swing.JFrame {
                             .addComponent(btnVoltar)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(btnVendas, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 440, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 440, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(consultarTodosButton, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(49, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -125,7 +161,9 @@ public class listagemVIEW extends javax.swing.JFrame {
                     .addComponent(btnVender))
                 .addGap(29, 29, 29)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
+                .addComponent(consultarTodosButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnVendas)
                     .addComponent(btnVoltar))
@@ -145,13 +183,16 @@ public class listagemVIEW extends javax.swing.JFrame {
     }//GEN-LAST:event_btnVenderActionPerformed
 
     private void btnVendasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVendasActionPerformed
-        //vendasVIEW vendas = new vendasVIEW(); 
-        //vendas.setVisible(true);
+        listarProdutosVendidos();
     }//GEN-LAST:event_btnVendasActionPerformed
 
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
         this.dispose();
     }//GEN-LAST:event_btnVoltarActionPerformed
+
+    private void consultarTodosButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consultarTodosButtonActionPerformed
+        listarProdutos();
+    }//GEN-LAST:event_consultarTodosButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -192,6 +233,7 @@ public class listagemVIEW extends javax.swing.JFrame {
     private javax.swing.JButton btnVendas;
     private javax.swing.JButton btnVender;
     private javax.swing.JButton btnVoltar;
+    private javax.swing.JButton consultarTodosButton;
     private javax.swing.JTextPane id_produto_venda;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
